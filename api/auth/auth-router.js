@@ -7,7 +7,7 @@ router.post('/register', (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).send('username and password required');
+    return res.status(400).json({ message: 'username and password required' });
   }
 
   knex('users')
