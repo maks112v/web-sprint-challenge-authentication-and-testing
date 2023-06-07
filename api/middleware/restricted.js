@@ -1,14 +1,25 @@
+const jwt = require('jsonwebtoken');
+
 module.exports = (req, res, next) => {
-  next();
-  /*
-    IMPLEMENT
+  const authorizationHeader = req.headers.authorization;
 
-    1- On valid token in the Authorization header, call next.
+  if (!authorizationHeader) {
+    // Missing token in the Authorization header
+    return res.status(401).send('token required');
+  }
 
-    2- On missing token in the Authorization header,
-      the response body should include a string exactly as follows: "token required".
+  // Extract the token from the Authorization header
+  const token = authorizationHeader.replace('Bearer ', '');
 
-    3- On invalid or expired token in the Authorization header,
-      the response body should include a string exactly as follows: "token invalid".
-  */
+  // Perform token validation here (e.g., check if it's valid and not expired)
+  // You can use a library like jsonwebtoken to validate the token
+
+  try {
+    const decodedToken = jwt.verify(token, 'secret_key');
+    req.userId = decodedToken.id; // Store the user ID in the request object for later use
+    next();
+  } catch (error) {
+    // Invalid or expired token
+    return res.status(401).send('token invalid');
+  }
 };
