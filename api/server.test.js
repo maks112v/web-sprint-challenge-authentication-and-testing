@@ -29,7 +29,7 @@ describe('Register Endpoint', () => {
       .send({ username: 'new_user', password: 'password123' });
 
     expect(response.statusCode).toBe(400);
-    expect(response.text).toBe('username taken');
+    expect(response.body).toHaveProperty('message', 'username taken');
   });
 });
 
@@ -54,7 +54,7 @@ describe('Login Endpoint', () => {
       .send({ username: 'example_user', password: 'wrong_password' });
 
     expect(response.statusCode).toBe(401);
-    expect(response.text).toBe('invalid credentials');
+    expect(response.body).toHaveProperty('message', 'invalid credentials');
   });
 });
 
@@ -83,6 +83,6 @@ describe('Jokes Endpoint', () => {
       .set('Authorization', 'Bearer YOUR_INVALID_TOKEN');
 
     expect(response.statusCode).toBe(401);
-    expect(response.text).toBe('token invalid');
+    expect(response.body).toHaveProperty('message', 'token invalid');
   });
 });

@@ -15,7 +15,7 @@ router.post('/register', (req, res) => {
     .first()
     .then((user) => {
       if (user) {
-        return res.status(400).send('username taken');
+        return res.status(400).json({ message: 'username taken' });
       }
 
       const hashedPassword = bcrypt.hashSync(password, 8);
@@ -29,7 +29,7 @@ router.post('/register', (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      res.status(500).send('Internal server error');
+      res.status(500).json({ message: 'Internal server error' });
     });
 });
 
@@ -37,7 +37,7 @@ router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).send('username and password required');
+    return res.status(400).json({ message: 'username and password required' });
   }
 
   knex('users')
@@ -45,13 +45,13 @@ router.post('/login', (req, res) => {
     .first()
     .then((user) => {
       if (!user) {
-        return res.status(401).send('invalid credentials');
+        return res.status(401).json({ message: 'invalid credentials' });
       }
 
       const isPasswordValid = bcrypt.compareSync(password, user.password);
 
       if (!isPasswordValid) {
-        return res.status(401).send('invalid credentials');
+        return res.status(401).json({ message: 'invalid credentials' });
       }
 
       const token = jwt.sign({ id: user.id }, 'secret_key');
@@ -63,7 +63,7 @@ router.post('/login', (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      res.status(500).send('Internal server error');
+      res.status(500).json({ message: 'Internal server error' });
     });
 });
 

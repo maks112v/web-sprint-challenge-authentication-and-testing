@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
 
   if (!authorizationHeader) {
-    return res.status(401).send('token required');
+    return res.status(401).json({ message: 'token required' });
   }
 
   const token = authorizationHeader.replace('Bearer ', '');
@@ -14,6 +14,6 @@ module.exports = (req, res, next) => {
     req.userId = decodedToken.id;
     next();
   } catch (error) {
-    return res.status(401).send('token invalid');
+    return res.status(401).json({ message: 'token invalid' });
   }
 };
